@@ -30,10 +30,13 @@ $s | Get-Member -MemberType Properties
 
 ### Example 3: Members of an object output from a command
 
+```Powershell
 Get-ChildItem | Get-Member
+```
+
+## Tip 3: Getting the type of an object
 
 ```Powershell
-Tip 3: Getting the type of an object
 Example:
 $s = "Hello"
 $s.GetType()
@@ -70,9 +73,9 @@ Get-Year "Strawberry"    # Error: Cannot process argument transformation
 
 ## Tip 5: Declaring script parameters
 
-I include this because I can never remember the syntax.
-
 ### Example: Required parameter and optional parameter with default value
+
+Include the following at the top of a .ps1 file:
 
 ```Powershell
 Param (
@@ -103,7 +106,7 @@ PS C:\MyScripts> function go {
 PS C:\MyScripts> go
 ```
 
-## Tip 7: Using List<T> from PowerShell
+## Tip 7: Using the generic List class from PowerShell
 
 Arrays in PowerShell (and .NET) are fixed-size. What if you want to build an array by progressively adding items to it, e.g., in a loop? You can use the + operator, but this is inefficient because it actually creates a brand new array each time. A better way is to use the generic List class from .NET.
 
@@ -120,21 +123,34 @@ $list[0].GetType() # returns Int32
 
 ```Powershell
 $list = [System.Collections.Generic.List[int]]::new()
-# … Add things to the list …
+# . . . Add things to the list . . .
 $a = $list.ToArray()
 $a.GetType() # returns Int32[]
 ```
 
 ### Tip 8: Using hashtables
 
-### Example:
+### Example 1: Creating and initializing a hashtable in one statement
 
 ```Powershell
-PS C:\MyScripts> $h = @{ "First" = "Homer" }
-PS C:\MyScripts> $h["First"]
-Homer
+PS C:\MyScripts> $h = @{ "First" = "Homer"; "Last" = "Simpson" }
+PS C:\MyScripts> $h.Count
+2
+PS C:\MyScripts> $h["Last"]
+Simpson
+```
+
+### Example 1: Creating and empty hashtable and adding to it
+
+```Powershell
+PS C:\MyScripts> $h = @{}
+PS C:\MyScripts> $h.Count
+0
+PS C:\MyScripts> $h["First"] = "Homer"
 PS C:\MyScripts> $h["Last"] = "Simpson"
-PS C:\MyScripts> $h.Last
+PS C:\MyScripts> $h.Count
+2
+PS C:\MyScripts> $h["Last"]
 Simpson
 ```
 

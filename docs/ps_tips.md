@@ -84,6 +84,12 @@ Param (
 )
 ```
 
+In the above example, the `$AsOf` parameter is optional, so we assign it a default value. In this
+case, the default value is the current date as obtained by invoking the `Get-Date` command. The
+parentheses around the `Get-Date` command mean that we're _invoking_ the command and assigning its
+_output_ to the `$AsOf` parameter. Without the parentheses, we'd be trying to assign the command
+itself to the `$AsOf` parameter, which would be an error because it's the wrong type.
+
 ## Tip 6: Quick-and-dirty functions
 
 You can define a function directly from the PowerShell prompt. This can be handy when you're working on a script or module, and you want a quick way to invoke your code.
@@ -105,6 +111,9 @@ PS C:\MyScripts> function go {
 >> }
 PS C:\MyScripts> go
 ```
+
+When you're writing a PowerShell module, it's helpful to have a quick-and-dirty function like this so
+you can easily test functions exported by your module.
 
 ## Tip 7: Using the generic List class from PowerShell
 
@@ -133,25 +142,36 @@ $a.GetType() # returns Int32[]
 ### Example 1: Creating and initializing a hashtable in one statement
 
 ```Powershell
-PS C:\MyScripts> $h = @{ "First" = "Homer"; "Last" = "Simpson" }
-PS C:\MyScripts> $h.Count
+PS C:\> $h = @{ "First" = "Homer"; "Last" = "Simpson" }
+PS C:\> $h.Count
 2
-PS C:\MyScripts> $h["Last"]
+PS C:\> $h["Last"]
 Simpson
 ```
 
-### Example 1: Creating and empty hashtable and adding to it
+### Example 2: Creating and empty hashtable and adding to it
 
 ```Powershell
-PS C:\MyScripts> $h = @{}
-PS C:\MyScripts> $h.Count
+PS C:\> $h = @{}
+PS C:\> $h.Count
 0
-PS C:\MyScripts> $h["First"] = "Homer"
-PS C:\MyScripts> $h["Last"] = "Simpson"
-PS C:\MyScripts> $h.Count
+PS C:\> $h["First"] = "Homer"
+PS C:\> $h["Last"] = "Simpson"
+PS C:\> $h.Count
 2
-PS C:\MyScripts> $h["Last"]
+PS C:\> $h["Last"]
 Simpson
+```
+
+### Example 3: Removing items from a hashtable
+
+```Powershell
+PS C:\> $h = @{ "First" = "Homer"; "Last" = "Simpson" }
+PS C:\> $h.Count
+2
+PS C:\> $h.Remove("First")
+PS C:\> $h.Count
+1
 ```
 
 ## Tip 9: String substitution/interpolation
@@ -159,19 +179,24 @@ Simpson
 ### Example 1: Simple variable substitution
 
 ```Powershell
-"$lastName, $firstName"
+PS C:\> $firstName = "Homer"
+PS C:\> $lastName = "Simpson"
+PS C:\> "$firstName $lastName"
+Homer Simpson
 ```
 
 ### Example 2: Use single quotes to disable string interpolation
 
 ```Powershell
-'$lastName, $firstName'
+PS C:\> '$firstName $lastName'
+$firstName $lastName
 ```
 
 ### Example 3: Enclose complex expressions in $()
 
 ```Powershell
-"$firstName has $($firstName.Length) characters."
+PS C:\> "$firstName has $($firstName.Length) characters."
+Homer has 5 characters.
 ```
 
 ## Tip 10: String formatting
@@ -181,13 +206,15 @@ When you want more control than built-in string substitution gives you.
 ### Example 1: Formatting a value as a 4-digit hexadecimal number
 
 ```Powershell
-$n = 254
-[string]::Format("0x{0:X4}", $n)  # Output is 0x00FE
+PS C:\> $n = 254
+PS C:\> [string]::Format("0x{0:X4}", $n)
+0x00FE
 ```
 
 ### Example 2: Using the -f operator
 
 ```Powershell
-$n = 254
-"0x{0:X4}" -n $n                  # Output is 0x00FE
+PS C:\> $n = 254
+PS C:\> "0x{0:X4}" -f $n
+0x00FE
 ```
